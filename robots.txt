@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://digipath-website.vercel.app/sitemap.xml
