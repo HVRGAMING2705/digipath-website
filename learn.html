@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="DigiPath Learning Platform — free courses, lessons, quizzes, mentors and certificates. An initiative by Crevanta Ventures." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://digipath-website.vercel.app/learn.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="DigiPath — Start Learning" />
+<meta property="og:description" content="Free courses in English, Math, Digital, Financial and Health literacy. An initiative by Crevanta Ventures." />
+<meta property="og:url" content="https://digipath-website.vercel.app/learn.html" />
+<meta property="og:image" content="https://digipath-website.vercel.app/og.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="theme-color" content="#0b0c0c" />
+<title>DigiPath — Start Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#0b0c0c;--bg-2:#121514;--surface:#181b1a;--ink:#f3efe5;--muted:#a7aaa4;--line:rgba(243,239,229,.16);--line-strong:rgba(243,239,229,.48);--orange:#ff6a2b;--yellow:#ffc83e;--aqua:#54c8bd;--button:#f3efe5;--button-text:#101211;--shadow:0 28px 90px rgba(0,0,0,.48);--red:#ff7a7a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Manrope",sans-serif;line-height:1.6}
+a{color:inherit}button,input,select,textarea{font:inherit}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+::selection{background:var(--yellow);color:#16120a}
+.wrap{width:min(1220px,calc(100% - 48px));margin:auto}
+.display{font-family:"Archivo Black",sans-serif;text-transform:uppercase;letter-spacing:-.05em;line-height:.92}
+.kicker{font-family:"Roboto Mono",monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--orange);display:flex;align-items:center;gap:10px}
+.kicker:before{content:"";width:34px;height:2px;background:var(--orange)}
+.topbar{position:sticky;top:0;z-index:60;border-bottom:1px solid var(--line);background:rgba(11,12,12,.86);backdrop-filter:blur(18px) saturate(1.4)}
+.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:10px 0}
+.initiative-lockup{display:flex;align-items:center;gap:11px;text-decoration:none;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em}
+.brand-mark{width:33px;height:33px;border-radius:9px 3px 9px 3px;background:var(--orange);color:#111;display:grid;place-items:center;font:1rem/1 "Archivo Black",sans-serif}
+.navlinks{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.navlinks a{font-size:.84rem;font-weight:800;text-decoration:none}.navlinks a:hover{color:var(--orange)}
+.btn{border:0;padding:12px 18px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--button);color:var(--button-text);font-size:.82rem;font-weight:800;text-decoration:none;text-transform:uppercase;letter-spacing:.045em;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:var(--orange);color:#111}.btn-orange{background:var(--orange);color:#111}.btn-orange:hover{background:var(--yellow)}
+.btn-outline{background:transparent;color:var(--ink);border:1px solid var(--line-strong)}.btn-outline:hover{border-color:var(--orange);color:var(--ink)}
+.btn-small{padding:9px 14px;min-height:38px;font-size:.72rem}.btn-aqua{background:var(--aqua);color:#0b1512}
+.hero{padding:84px 0 40px;position:relative;overflow:hidden;background:radial-gradient(circle at 75% 15%,rgba(84,200,189,.14),transparent 32%),radial-gradient(circle at 25% 80%,rgba(255,106,43,.12),transparent 30%),linear-gradient(150deg,#050607 20%,#0d1115 64%,#060707)}
+.hero h1{font-size:clamp(2.8rem,7vw,6rem);margin:16px 0}
+.hero h1 .outline{color:transparent;-webkit-text-stroke:2px var(--ink)}
+.hero p{color:var(--muted);max-width:62ch;font-size:1.08rem}
+.free-note{display:inline-flex;gap:9px;align-items:center;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.free-note i{width:8px;height:8px;border-radius:50%;background:var(--aqua);box-shadow:0 0 0 5px rgba(84,200,189,.18)}
+section.view{padding:52px 0 72px}
+[hidden]{display:none!important}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;gap:10px}
+.card h3{margin:0;font:1.15rem/1.1 "Archivo Black",sans-serif;text-transform:uppercase;letter-spacing:-.03em}
+.card p{margin:0;color:var(--muted);font-size:.95rem}
+.meta{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:"Roboto Mono",monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;border:1px solid var(--line-strong);padding:4px 8px;border-radius:99px;color:var(--ink)}
+.chip.track{color:var(--yellow);border-color:var(--yellow)}
+.card-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0;align-items:center}
+.filter-btn{border:1px solid var(--line-strong);background:transparent;color:var(--ink);padding:9px 14px;cursor:pointer;font-weight:800;font-size:.8rem}
+.filter-btn.active{background:var(--orange);color:#111;border-color:var(--orange)}
+.search{flex:1;min-width:220px;background:var(--surface);border:1px solid var(--line);color:var(--ink);padding:12px 14px}
+.progress-wrap{background:#262a28;height:12px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));transition:width .8s cubic-bezier(.2,.75,.15,1)}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-weight:800;font-size:.85rem}
+.field input,.field select,.field textarea{background:var(--bg-2);border:1px solid var(--line);color:var(--ink);padding:12px 14px;width:100%}
+.panel{background:var(--surface);border:1px solid var(--line);padding:28px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:820px){.two-col{grid-template-columns:1fr}.wrap{width:calc(100% - 30px)}}
+.lesson-row{display:flex;justify-content:space-between;gap:14px;align-items:center;border-top:1px solid var(--line);padding:14px 0}
+.lesson-row .done{color:var(--aqua);font-weight:800}
+.steps li{margin-bottom:8px}
+.quiz-q{border-top:1px solid var(--line);padding:18px 0}
+.quiz-q legend,.quiz-q p{font-weight:800}
+.quiz-q label{display:block;padding:7px 0;color:var(--muted);cursor:pointer}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:20px 0}
+.stat-tile{background:var(--surface);border:1px solid var(--line);padding:20px}
+.stat-tile strong{font:2rem/1 "Archivo Black",sans-serif;color:var(--orange);display:block}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--yellow);color:#111;font-weight:800;padding:12px 20px;z-index:200;box-shadow:var(--shadow)}
+#chatbot-toggle{position:fixed;right:22px;bottom:22px;z-index:150;width:58px;height:58px;border-radius:50%;border:0;background:var(--orange);color:#111;font-size:1.4rem;cursor:pointer;box-shadow:var(--shadow)}
+#chatbot-panel{position:fixed;right:22px;bottom:92px;z-index:150;width:min(360px,calc(100vw - 32px));background:var(--surface);border:1px solid var(--line-strong);box-shadow:var(--shadow);display:flex;flex-direction:column}
+#chatbot-messages{max-height:320px;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.chat-msg{padding:10px 12px;font-size:.92rem}.chat-msg.bot{background:var(--bg-2);border:1px solid var(--line)}.chat-msg.user{background:var(--orange);color:#111;align-self:flex-end;font-weight:700}
+#chatbot-form{display:flex;border-top:1px solid var(--line)}#chatbot-input{flex:1;background:transparent;border:0;color:var(--ink);padding:12px}
+.cert{background:#f7f1e6;color:#141414;padding:44px;text-align:center;border:6px double #b8860b}
+.cert h2{font:2rem/1 "Archivo Black",sans-serif;text-transform:uppercase}
+footer{border-top:1px solid var(--line);padding:44px 0;color:var(--muted)}
+.badge-supporter{background:var(--yellow);color:#111;font-weight:800;padding:3px 9px;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em}
+.msg{color:var(--aqua);font-weight:700}.err{color:var(--red);font-weight:700}
+table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;font-size:.92rem}
+@media print{body{background:#fff}body *{visibility:hidden}#certificate-area,#certificate-area *{visibility:visible}#certificate-area{position:absolute;inset:0}.no-print{display:none!important}}
+</style>
+</head>
+<body>
+<a href="#catalog" style="position:absolute;left:-999px" onfocus="this.style.left='10px'" onblur="this.style.left='-999px'">Skip to content</a>
+<header class="topbar">
+  <nav class="nav wrap" aria-label="Learning platform navigation">
+    <a class="initiative-lockup" href="index.html"><span class="brand-mark">DP</span><span>DigiPath<br /><small>An initiative by Crevanta Ventures</small></span></a>
+    <div class="navlinks">
+      <a href="index.html">Home</a>
+      <a href="#" data-nav="catalog">Catalog</a>
+      <a href="#" data-nav="dashboard">Dashboard</a>
+      <a href="#" data-nav="mentors">Mentors</a>
+      <a href="#" data-nav="supporter">Supporter</a>
+      <a href="#" data-nav="admin">Admin</a>
+      <span id="auth-area"></span>
+    </div>
+  </nav>
+</header>
+<main id="top">
+  <section class="hero"><div class="wrap">
+    <div class="kicker">DigiPath Learning Platform · An initiative by Crevanta Ventures</div>
+    <h1 class="display">Start <span class="outline">learning.</span></h1>
+    <p>Real courses, short lessons, quizzes and mentors across five tracks — Conversational English, Basic Math, Digital Literacy, Financial Literacy and Health Literacy.</p>
+    <span class="free-note"><i></i>Core learning is FREE forever · Supporter plans only sponsor learners</span>
+  </div></section>
+
+  <section class="view" id="view-catalog"><div class="wrap" id="catalog">
+    <div class="kicker">Course catalog</div>
+    <h2 class="display" style="font-size:clamp(2rem,5vw,3.6rem)">Pick a course. Begin today.</h2>
+    <div class="filters" role="group" aria-label="Filter by track">
+      <button class="filter-btn active" data-track-filter="All" type="button">All tracks</button>
+      <button class="filter-btn" data-track-filter="Conversational English" type="button">Conversational English</button>
+      <button class="filter-btn" data-track-filter="Basic Math" type="button">Basic Math</button>
+      <button class="filter-btn" data-track-filter="Digital Literacy" type="button">Digital Literacy</button>
+      <button class="filter-btn" data-track-filter="Financial Literacy" type="button">Financial Literacy</button>
+      <button class="filter-btn" data-track-filter="Health Literacy" type="button">Health Literacy</button>
+      <input class="search" id="catalog-search" type="search" placeholder="Search courses…" aria-label="Search courses" />
+    </div>
+    <p id="catalog-count" class="kicker"></p>
+    <div class="grid" id="course-grid"></div>
+  </div></section>
+
+  <section class="view" id="view-course" hidden><div class="wrap" id="course-detail"></div></section>
+  <section class="view" id="view-lesson" hidden><div class="wrap" id="lesson-detail"></div></section>
+  <section class="view" id="view-quiz" hidden><div class="wrap" id="quiz-detail"></div></section>
+
+  <section class="view" id="view-auth" hidden><div class="wrap">
+    <div class="kicker">Your account</div>
+    <h2 class="display" style="font-size:clamp(2rem,5vw,3.4rem)">Login or register</h2>
+    <p id="auth-msg" aria-live="polite"></p>
+    <div class="two-col">
+      <div class="panel"><h3>Login</h3>
+        <form id="login-form">
+          <div class="field"><label for="login-email">Email</label><input id="login-email" type="email" required autocomplete="email" /></div>
+          <div class="field"><label for="login-password">Password</label><input id="login-password" type="password" required autocomplete="current-password" /></div>
+          <button class="btn btn-orange" type="submit">Login</button>
+        </form>
+        <div class="panel" style="margin-top:18px;border-color:var(--yellow)">
+          <strong>Demo student account (labelled demo)</strong>
+          <p>Email: <code>demo@digipath.learn</code><br />Password: <code>demo1234</code></p>
+          <p><strong>Admin demo account</strong><br />Email: <code>admin@digipath.learn</code><br />Password: <code>admin1234</code></p>
+        </div>
+      </div>
+      <div class="panel"><h3>Register — free forever</h3>
+        <form id="register-form">
+          <div class="field"><label for="register-name">Name</label><input id="register-name" required autocomplete="name" /></div>
+          <div class="field"><label for="register-email">Email</label><input id="register-email" type="email" required autocomplete="email" /></div>
+          <div class="field"><label for="register-password">Password</label><input id="register-password" type="password" required minlength="6" autocomplete="new-password" /></div>
+          <button class="btn" type="submit">Create free account</button>
+        </form>
+        <p style="color:var(--muted)">Demo-grade accounts: details are stored only in this browser (localStorage). Guests can browse the full catalog; enrolling asks you to login.</p>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="view" id="view-dashboard" hidden><div class="wrap" id="dashboard-content"></div></section>
+
+  <section class="view" id="view-mentors" hidden><div class="wrap">
+    <div class="kicker">Mentors</div>
+    <h2 class="display" style="font-size:clamp(2rem,5vw,3.4rem)">Ask a mentor</h2>
+    <div class="grid" id="mentor-grid"></div>
+    <div class="panel" style="margin-top:20px"><h3>Send a question</h3>
+      <form id="mentor-form">
+        <div class="field"><label for="mentor-select">Mentor</label><select id="mentor-select"></select></div>
+        <div class="field"><label for="mentor-message">Your question</label><textarea id="mentor-message" rows="4" required placeholder="Example: I finished the greetings lesson. What should I practise next?"></textarea></div>
+        <button class="btn btn-orange" type="submit">Send to mentor</button>
+        <p id="mentor-form-msg" aria-live="polite"></p>
+      </form>
+    </div>
+  </div></section>
+
+  <section class="view" id="view-supporter" hidden><div class="wrap">
+    <div class="kicker">Sponsor a learner</div>
+    <h2 class="display" style="font-size:clamp(2rem,5vw,3.4rem)">Supporter plans</h2>
+    <p style="color:var(--muted);max-width:65ch">Learning on DigiPath is <strong style="color:var(--ink)">free forever</strong> for students. Supporter plans never gate lessons, courses or quizzes — they sponsor a learner's data, devices and mentor time.</p>
+    <div class="two-col">
+      <div class="card"><h3>Supporter</h3><p class="display" style="font-size:2rem">₹499<span style="font-size:1rem">/mo</span></p><p>Sponsor one learner each month. Supporter badge on your account, monthly impact note.</p><button class="btn btn-orange supporter-plan-btn" data-plan="Supporter" data-price="₹499/mo" type="button">Become a Supporter</button></div>
+      <div class="card"><h3>Patron</h3><p class="display" style="font-size:2rem">₹4,999<span style="font-size:1rem">/yr</span></p><p>Sponsor learners for a full year. Patron badge, impact summary and name on the supporter wall.</p><button class="btn btn-orange supporter-plan-btn" data-plan="Patron" data-price="₹4,999/yr" type="button">Become a Patron</button></div>
+    </div>
+  </div></section>
+
+  <section class="view" id="view-checkout" hidden><div class="wrap">
+    <div class="kicker">Demo checkout — no real payment</div>
+    <h2 class="display" style="font-size:clamp(2rem,5vw,3.4rem)">Checkout</h2>
+    <div class="panel" style="max-width:640px">
+      <p><strong id="checkout-plan">Supporter — ₹499/mo</strong></p>
+      <p class="err">Demo checkout — no real payment. Do not enter real card details.</p>
+      <form id="checkout-form">
+        <div class="field"><label for="checkout-name">Name on card / UPI holder</label><input id="checkout-name" required /></div>
+        <div class="field"><label for="checkout-card">Mock card number or UPI ID</label><input id="checkout-card" required placeholder="4242 4242 4242 4242 or name@upi" /></div>
+        <div class="field"><label for="checkout-expiry">Expiry (mock)</label><input id="checkout-expiry" placeholder="12/28" /></div>
+        <button class="btn btn-orange" type="submit">Pay (demo)</button>
+      </form>
+      <div id="checkout-success" hidden><h3>✓ Thank you — you are now a <span id="checkout-success-plan">Supporter</span></h3><p>Your supporter status and badge are saved on your account. Core learning stays free forever for every learner.</p><button class="btn" id="checkout-to-dashboard" type="button">Go to dashboard</button></div>
+    </div>
+  </div></section>
+
+  <section class="view" id="view-admin" hidden><div class="wrap" id="admin-content"></div></section>
+  <section class="view" id="view-certificate" hidden><div class="wrap" id="certificate-area"></div></section>
+</main>
+<footer><div class="wrap">
+  <p><strong style="color:var(--ink)">DigiPath — an initiative by Crevanta Ventures.</strong></p>
+  <p>Leadership: Vikranth Reddy — DigiPath initiative lead &amp; Founder &amp; CEO, Crevanta Ventures · Manvitha — DigiPath co-lead · Crevanta Ventures COO: Dhanush.</p>
+  <p><a href="index.html">Back to DigiPath home</a> · <a href="legal.html">Privacy · Terms</a> · Core learning is free forever.</p>
+</div></footer>
+
+<div id="toast" hidden></div>
+<button id="chatbot-toggle" type="button" aria-label="Open DigiPath help chat" aria-expanded="false">?</button>
+<div id="chatbot-panel" hidden>
+  <div style="padding:14px 16px;border-bottom:1px solid var(--line)"><strong>DigiPath Help</strong><br /><span style="color:var(--muted);font-size:.85rem">Ask about courses, cost, certificates, mentors or quizzes.</span></div>
+  <div id="chatbot-messages"></div>
+  <form id="chatbot-form"><input id="chatbot-input" placeholder="Type your question…" aria-label="Chat question" /><button class="btn btn-orange btn-small" type="submit">Send</button></form>
+</div>
+<script src="digipath-app.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
