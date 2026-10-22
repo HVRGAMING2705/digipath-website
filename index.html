@@ -140,6 +140,8 @@
     }
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.preloader{display:none}.marquee-track{animation:none}.reveal{opacity:1;transform:none;transition:none}.btn,.track{transition:none}#particleField{display:none}}
   </style>
+<meta property="og:image" content="https://digipath-website.vercel.app/og.png">
+<meta name="twitter:image" content="https://digipath-website.vercel.app/og.png">
 </head>
 <body class="loading">
   <div class="preloader" aria-hidden="true"><div class="loader-inner"><div class="loader-mark"><strong>DP/</strong><span>Building paths<br>to opportunity</span></div><div class="loader-track"><div class="loader-bar"></div></div></div></div>
@@ -236,13 +238,14 @@
     </div></section>
   </main>
 
-  <footer><div class="wrap"><div class="footer-grid"><div><div class="footer-title">Digi<span>Path</span></div><p class="footer-copy">An initiative by Crevanta Ventures. Building a more accessible path from digital learning to opportunity.</p></div><div class="footer-links"><a href="#tracks">Start learning</a><a href="#mentorship">Mentorship</a><a href="#team">Team</a><a href="#faq">FAQ</a></div></div><div class="footer-bottom"><span>Practical skills for what comes next</span><span>Free during launch</span></div></div></footer>
+  <footer><div class="wrap"><div class="footer-grid"><div><div class="footer-title">Digi<span>Path</span></div><p class="footer-copy">An initiative by Crevanta Ventures. Building a more accessible path from digital learning to opportunity.</p></div><div class="footer-links"><a href="#tracks">Start learning</a><a href="#mentorship">Mentorship</a><a href="#team">Team</a><a href="#faq">FAQ</a></div></div><div class="footer-bottom"><span>Practical skills for what comes next</span><span>Free during launch</span></div></div><span class="fleet-legal" style="display:block;text-align:center;padding:10px 0;font-size:13px"><a href="/legal.html">Privacy · Terms</a></span>
+</footer>
 
   <div class="modal" id="enrollModal" role="dialog" aria-modal="true" aria-labelledby="enrollTitle"><div class="dialog">
     <div class="dialog-head"><div><div class="eyebrow">Free during launch</div><h2 id="enrollTitle">Prepare enrollment</h2></div><button class="close" type="button" aria-label="Close enrollment form">×</button></div>
     <p class="form-note">Complete the details below to create an enrollment request you can download. Direct online submission will open when DigiPath’s enrollment channel is connected.</p>
-    <form id="enrollForm"><div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name" required /></div><div class="field"><label for="contact">Email or phone</label><input id="contact" name="contact" autocomplete="email" required /></div><div class="field"><label for="track">Learning track</label><select id="track" name="track" required><option>Conversational English</option><option>Basic Math</option><option>Digital Literacy</option><option>Financial Literacy</option><option>Health Literacy</option><option>Full 5-track bundle</option></select></div><div class="choice">This page does not send or save personal details. Your request is generated only on this device.</div><button class="btn btn-orange" type="submit">Download enrollment request</button></form>
-    <div class="prepared" id="prepared" aria-live="polite"><strong>Request downloaded.</strong><p>Keep the file ready for DigiPath’s enrollment channel when it opens.</p></div>
+    <form id="enrollForm"><div style="display:none" aria-hidden="true"><input type="text" name="company_website" autocomplete="off" tabindex="-1"></div><div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name" required /></div><div class="field"><label for="contact">Email or phone</label><input id="contact" name="contact" autocomplete="email" required /></div><div class="field"><label for="track">Learning track</label><select id="track" name="track" required><option>Conversational English</option><option>Basic Math</option><option>Digital Literacy</option><option>Financial Literacy</option><option>Health Literacy</option><option>Full 5-track bundle</option></select></div><div class="choice">This page does not send or save personal details. Your request is generated only on this device.</div><button class="btn btn-orange" type="submit">Download enrollment request</button></form>
+    <div class="prepared" id="prepared" aria-live="polite"><strong>Downloaded.</strong><p>Keep the file ready for DigiPath’s enrollment channel when it opens.</p></div>
   </div></div>
 
   <script>
@@ -287,5 +290,7 @@
       }
     })();
   </script>
+<script>document.addEventListener('submit',function(e){var hp=e.target.querySelector('input[name="company_website"]');if(hp&&hp.value){e.preventDefault();e.stopPropagation();}},true);</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
