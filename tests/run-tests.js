@@ -111,19 +111,43 @@ function snapshotOf(window) {
   results = app.getState().quizResults.filter(r => r.email === 'test.learner@example.com');
   assert('second quiz result stored', results.length === 2 && results[1].pct === 0);
 
-  // 7. Mentor message stored + inbox thread with reply
+  // 7. Real mentor flow: empty at first, register, ask, await, real reply
   app.showView('mentors');
-  doc.getElementById('mentor-select').value = app.MENTORS[0].id;
+  assert('no fictional mentors listed initially', app.getMentors().length === 0 && doc.getElementById('mentor-grid').textContent.includes('No mentors have joined yet'));
+  const mentor = app.registerMentor('Real Mentor', 'real.mentor@example.com', 'Conversational English', 'Everyday English conversation.');
+  assert('mentor registration lists a real mentor', !!mentor && app.getMentors().length === 1);
+  app.showView('mentors');
+  doc.getElementById('mentor-select').value = mentor.id;
   doc.getElementById('mentor-message').value = 'I finished lesson 1. What should I practise next?';
   submit(window, doc.getElementById('mentor-form'));
   const msgs = app.getState().mentorMessages.filter(m => m.email === 'test.learner@example.com');
-  assert('mentor message stored', msgs.length === 1 && msgs[0].text.includes('lesson 1'));
+  assert('mentor message stored with no fabricated reply', msgs.length === 1 && msgs[0].text.includes('lesson 1') && msgs[0].reply === null);
   app.showView('dashboard');
-  assert('mentor inbox shows message + seeded reply', doc.getElementById('mentor-inbox').textContent.includes('What should I practise next') && doc.getElementById('mentor-inbox').textContent.includes('replied'));
+  assert('mentor inbox shows message + honest awaiting state', doc.getElementById('mentor-inbox').textContent.includes('What should I practise next') && doc.getElementById('mentor-inbox').textContent.includes('Awaiting reply'));
+  // Mentor logs in with the registered email and replies for real
+  doc.getElementById('register-name').value = 'Real Mentor';
+  doc.getElementById('register-email').value = 'real.mentor@example.com';
+  doc.getElementById('register-password').value = 'mentorpass1';
+  app.showView('auth');
+  submit(window, doc.getElementById('register-form'));
+  assert('mentor account login works', !!app.currentUser() && app.currentUser().email === 'real.mentor@example.com');
+  const replied = app.replyMentorMessage(msgs[0].id, 'Practise the greetings out loud, then start lesson 2.');
+  assert('mentor reply stored', !!replied && replied.reply.includes('greetings'));
+  app.showView('dashboard');
+  assert('mentor reply visible to mentor', doc.getElementById('dashboard-content').textContent.includes('Practise the greetings'));
+  // Back to the learner: reply now visible, and strangers cannot reply
+  app.showView('auth');
+  doc.getElementById('login-email').value = 'test.learner@example.com';
+  doc.getElementById('login-password').value = 'testpass1';
+  submit(window, doc.getElementById('login-form'));
+  assert('non-mentor cannot overwrite a reply', app.replyMentorMessage(msgs[0].id, 'forged') === null);
+  app.showView('dashboard');
+  assert('learner inbox shows real mentor reply', doc.getElementById('mentor-inbox').textContent.includes('Practise the greetings'));
 
-  // 8. Chatbot FAQ + fallback
+  // 8. Chatbot FAQ + content-grounded answer + honest fallback
   assert('chatbot answers cost question with free-forever', app.chatAnswer('How much does it cost?').includes('FREE forever'));
-  assert('chatbot graceful fallback', app.chatAnswer('zzzqqq nonsense').includes('I can answer questions about'));
+  assert('chatbot answers from real lesson content', app.chatAnswer('greetings').includes('From the lesson') && app.chatAnswer('greetings').includes('Everyday Conversations'));
+  assert('chatbot honest fallback, no invented answer', app.chatAnswer('zzzqqq nonsense').includes('not an AI model') && app.chatAnswer('zzzqqq nonsense').includes('course material'));
 
   // 9. Logout + login (demo account)
   click(doc.getElementById('logout-btn'));
@@ -146,6 +170,12 @@ function snapshotOf(window) {
   assert('checkout success shown', !doc.getElementById('checkout-success').hidden);
   app.showView('dashboard');
   assert('supporter badge on dashboard', !!doc.getElementById('supporter-badge'));
+
+  // 10b. Certificate gating: incomplete course gets no certificate
+  app.enrollIn('fin-budget');
+  app.openCertificate('fin-budget');
+  assert('certificate blocked below 100%', !doc.getElementById('certificate') && doc.getElementById('certificate-area').textContent.includes('not ready yet'));
+  app.showView('dashboard');
 
   // 11. Certificate at 100%
   const certCourse = app.getCourse('eng-everyday');
@@ -181,7 +211,7 @@ function snapshotOf(window) {
   assert('admin demo login works', app.isAdmin());
   app.showView('admin');
   assert('admin stats render', !!doc.getElementById('admin-stats') && !!doc.getElementById('admin-enrollments'));
-  assert('admin enrollment list has seeded rows', doc.getElementById('admin-enrollments').textContent.includes('asha.k@example.org'));
+  assert('admin enrollment list has no seeded/fake learners', !doc.getElementById('admin-enrollments').textContent.includes('asha.k@example.org'));
   doc.getElementById('admin-title').value = 'Spoken Telugu Basics';
   doc.getElementById('admin-track').value = 'Conversational English';
   doc.getElementById('admin-level').value = 'Beginner';

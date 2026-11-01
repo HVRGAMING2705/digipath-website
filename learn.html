@@ -169,6 +169,17 @@ table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--li
     <div class="kicker">Mentors</div>
     <h2 class="display" style="font-size:clamp(2rem,5vw,3.4rem)">Ask a mentor</h2>
     <div class="grid" id="mentor-grid"></div>
+    <div class="panel" style="margin-top:20px"><h3>Register as a mentor</h3>
+      <p style="color:var(--muted)">Only real people who register here are listed above. There are no placeholder mentors. DigiPath has not verified mentor credentials, so please do not share personal details beyond your learning question.</p>
+      <form id="mentor-register-form">
+        <div class="field"><label for="mentor-reg-name">Your name</label><input id="mentor-reg-name" required /></div>
+        <div class="field"><label for="mentor-reg-email">Your email</label><input id="mentor-reg-email" type="email" required /><p style="color:var(--muted);font-size:.85rem">Use the same email as your DigiPath account so you can reply to learner questions from your Dashboard.</p></div>
+        <div class="field"><label for="mentor-reg-track">Track you can guide</label><select id="mentor-reg-track"><option>Conversational English</option><option>Basic Math</option><option>Digital Literacy</option><option>Financial Literacy</option><option>Health Literacy</option></select></div>
+        <div class="field"><label for="mentor-reg-expertise">What you can help with</label><textarea id="mentor-reg-expertise" rows="3" placeholder="Example: Everyday English conversation and interview practice."></textarea></div>
+        <button class="btn btn-orange" type="submit">Register as a mentor</button>
+        <p id="mentor-reg-msg" aria-live="polite"></p>
+      </form>
+    </div>
     <div class="panel" style="margin-top:20px"><h3>Send a question</h3>
       <form id="mentor-form">
         <div class="field"><label for="mentor-select">Mentor</label><select id="mentor-select"></select></div>
@@ -184,8 +195,8 @@ table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--li
     <h2 class="display" style="font-size:clamp(2rem,5vw,3.4rem)">Supporter plans</h2>
     <p style="color:var(--muted);max-width:65ch">Learning on DigiPath is <strong style="color:var(--ink)">free forever</strong> for students. Supporter plans never gate lessons, courses or quizzes. They sponsor a learner's data, devices and mentor time.</p>
     <div class="two-col">
-      <div class="card"><h3>Supporter</h3><p class="display" style="font-size:2rem">₹499<span style="font-size:1rem">/mo</span></p><p>Sponsor one learner each month. Supporter badge on your account, monthly impact note.</p><button class="btn btn-orange supporter-plan-btn" data-plan="Supporter" data-price="₹499/mo" type="button">Become a Supporter</button></div>
-      <div class="card"><h3>Patron</h3><p class="display" style="font-size:2rem">₹4,999<span style="font-size:1rem">/yr</span></p><p>Sponsor learners for a full year. Patron badge, impact summary and name on the supporter wall.</p><button class="btn btn-orange supporter-plan-btn" data-plan="Patron" data-price="₹4,999/yr" type="button">Become a Patron</button></div>
+      <div class="card"><h3>Supporter</h3><p class="display" style="font-size:2rem">₹499<span style="font-size:1rem">/mo</span></p><p>Sponsor one learner each month. Supporter badge on your account.</p><button class="btn btn-orange supporter-plan-btn" data-plan="Supporter" data-price="₹499/mo" type="button">Become a Supporter</button></div>
+      <div class="card"><h3>Patron</h3><p class="display" style="font-size:2rem">₹4,999<span style="font-size:1rem">/yr</span></p><p>Sponsor learners for a full year. Patron badge and impact summary.</p><button class="btn btn-orange supporter-plan-btn" data-plan="Patron" data-price="₹4,999/yr" type="button">Become a Patron</button></div>
     </div>
   </div></section>
 
@@ -217,7 +228,7 @@ table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--li
 <div id="toast" hidden></div>
 <button id="chatbot-toggle" type="button" aria-label="Open DigiPath help chat" aria-expanded="false">?</button>
 <div id="chatbot-panel" hidden>
-  <div style="padding:14px 16px;border-bottom:1px solid var(--line)"><strong>DigiPath Help</strong><br /><span style="color:var(--muted);font-size:.85rem">Ask about courses, cost, certificates, mentors or quizzes.</span></div>
+  <div style="padding:14px 16px;border-bottom:1px solid var(--line)"><strong>DigiPath Course Guide</strong><br /><span style="color:var(--muted);font-size:.85rem">Answers come from DigiPath's own course lessons — this is not an AI model. Ask about a topic, cost, certificates, mentors or quizzes.</span></div>
   <div id="chatbot-messages"></div>
   <form id="chatbot-form"><input id="chatbot-input" placeholder="Type your question…" aria-label="Chat question" /><button class="btn btn-orange btn-small" type="submit">Send</button></form>
 </div>

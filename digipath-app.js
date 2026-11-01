@@ -256,20 +256,35 @@ C('health-mind-firstaid', 'Health Literacy', 'Mental Wellbeing and First Aid', '
     Q('A healthy night screen habit is…', ['Phone in hand until sleep', 'Charge the phone away from the bed', 'All notifications on loud', 'Videos at full brightness in the dark'], 1) ])
 );
 
-var MENTORS = [
-  { id: 'm-ananya', name: 'Ananya Sharma', track: 'Conversational English', blurb: 'English coach who helps beginners speak in week one, small sentences, zero fear of mistakes.' },
-  { id: 'm-rohit', name: 'Rohit Verma', track: 'Basic Math', blurb: 'Maths mentor for daily-life numbers, exam basics and money calculations, explained with real examples.' },
-  { id: 'm-priya', name: 'Priya Nair', track: 'Digital Literacy', blurb: 'Digital safety specialist: smartphones, UPI safety, privacy and work tools, patiently step by step.' },
-  { id: 'm-arjun', name: 'Arjun Mehta', track: 'Financial Literacy', blurb: 'Personal-finance mentor covering budgets, banking, loans and first investments in plain language.' },
-  { id: 'm-kavitha', name: 'Dr. Kavitha Rao', track: 'Health Literacy', blurb: 'Community-health mentor who explains medicines, reports and everyday wellbeing without jargon.' },
-  { id: 'm-sneha', name: 'Sneha Patel', track: 'Conversational English', blurb: 'Career-communication mentor: interviews, workplace English and confident self-introduction.' }
-];
+/* ---------------- real mentors: self-registered only ---------------- */
+/* No mentor is ever listed unless a real person registers through the
+   Mentors view. There are no built-in, seeded or fictional mentors.
+   Mentors are stored in this browser (localStorage) for now.
+   BACKEND UPGRADE PATH (needs an account only the site owner can create):
+   replace loadMentors/saveMentors with calls to a mentor table, e.g.
+   Supabase table `mentors` with columns id, name, email, track,
+   expertise, created_at — and mentor_messages with a reply flow. Until
+   that exists, a question simply waits for its mentor to reply; no reply
+   is ever fabricated. */
+var MENTORS_KEY = 'digipath_mentors_v1';
+function loadMentors() { return loadJSON(MENTORS_KEY, []); }
+function saveMentors(list) { saveJSON(MENTORS_KEY, list); }
+function getMentors() { return loadMentors(); }
+function registerMentor(name, email, track, expertise) {
+  name = String(name || '').trim(); email = String(email || '').trim().toLowerCase(); track = String(track || '').trim();
+  if (!name || !email || !track) return null;
+  var list = loadMentors();
+  var existing = list.filter(function (m) { return m.email === email; })[0];
+  if (existing) { existing.name = name; existing.track = track; existing.blurb = String(expertise || '').trim(); saveMentors(list); return existing; }
+  var m = { id: 'm-' + Date.now(), name: name, email: email, track: track, blurb: String(expertise || '').trim(), createdAt: todayStr() };
+  list.push(m); saveMentors(list); return m;
+}
 
 var FAQS = [
   { keys: ['cost', 'price', 'free', 'pay', 'fee', 'charge'], a: 'DigiPath core learning is FREE forever. Every course, lesson and quiz costs nothing. Supporter plans (₹499/mo, ₹4,999/yr) are only for people who want to sponsor a learner; they are not needed to access lessons.' },
   { keys: ['start', 'begin', 'enroll', 'enrol', 'join', 'register', 'sign up', 'signup'], a: 'To start: create a free account from the Login view (or use the demo account shown there), open the Catalog, pick a course and tap Enroll. Then open the course and start Lesson 1.' },
   { keys: ['certificate', 'certificat'], a: 'Complete 100% of a course\'s lessons and your Dashboard shows a "View certificate" button. The certificate view is printable. Use its Print button.' },
-  { keys: ['mentor', 'help', 'doubt', 'teacher', 'guide'], a: 'Open the Mentors view, pick a mentor for your track and send your question with the "Ask a mentor" form. Replies appear in the mentor inbox on your Dashboard.' },
+  { keys: ['mentor', 'help', 'doubt', 'teacher', 'guide'], a: 'Open the Mentors view. Only real people who registered as mentors are listed there — if the list is empty, no mentor has joined yet and you can be the first to register. Send your question with the "Ask a mentor" form; a reply appears in your Dashboard mentor inbox only when that mentor actually replies. Nothing is auto-answered for them.' },
   { keys: ['quiz', 'test', 'exam', 'score'], a: 'Every course has a quiz with at least 5 questions. Open a course and tap "Take quiz". Scoring is instant and your results are saved in your Dashboard history.' },
   { keys: ['login', 'log in', 'password', 'account', 'forgot'], a: 'Use the Login view at the top. Demo student: demo@digipath.learn / demo1234. Admin demo: admin@digipath.learn / admin1234. Accounts are demo-grade and stored only in this browser.' },
   { keys: ['supporter', 'sponsor', 'donate', 'patron', 'support'], a: 'Supporter (₹499/mo) and Patron (₹4,999/yr) plans sponsor a learner. They fund data, devices and mentor time. Checkout is a labelled demo: no real payment happens, and learning stays free for students.' },
@@ -277,14 +292,7 @@ var FAQS = [
   { keys: ['progress', 'streak', 'dashboard', 'continue'], a: 'Your Dashboard shows enrolled courses, progress % per course, a Continue Learning button for your last unfinished lesson, quiz history, lessons completed and your streak.' },
   { keys: ['language', 'telugu', 'hindi'], a: 'Courses are currently written in simple English, designed for beginners. Regional-language versions are on the DigiPath roadmap.' }
 ];
-var FALLBACK_ANSWER = 'I can answer questions about courses, cost (learning is free), certificates, mentors, quizzes, accounts and supporter plans. Try asking "How do I get a certificate?" or "Is DigiPath free?", or use the Ask a Mentor form for personal help.';
-
-var SEED_ENROLLMENTS = [
-  { name: 'Asha K.', email: 'asha.k@example.org', course: 'Everyday Conversations' },
-  { name: 'Mohammed I.', email: 'md.imran@example.org', course: 'Stay Safe Online' },
-  { name: 'Lakshmi T.', email: 'lakshmi.t@example.org', course: 'Budgeting Basics' },
-  { name: 'Ravi S.', email: 'ravi.s@example.org', course: 'Numbers That Work Every Day' }
-];
+var FALLBACK_ANSWER = 'I could not find that in DigiPath\'s course material. I only answer from the actual lessons — I am not an AI model and I do not invent answers. Try a course topic such as "greetings", "budgeting" or "UPI safety", or ask "How much does it cost?" or "How do I get a certificate?". For personal help, use the Ask a Mentor form.';
 
 /* ---------------- storage ---------------- */
 function loadJSON(key, fallback) { try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; } }
@@ -304,7 +312,7 @@ var auth = loadAuth();
 var state = loadState();
 function persist() { saveJSON(AUTH_KEY, auth); saveJSON(STATE_KEY, state); }
 function currentUser() { if (!auth.session) return null; return auth.users.find(function (u) { return u.email === auth.session; }) || null; }
-function isAdmin() { var u = currentUser(); return !!((u && u.role === 'admin') || auth.roleOverride === 'admin'); }
+function isAdmin() { var u = currentUser(); return !!(u && u.role === 'admin'); /* stored roleOverride is ignored: no self-granted admin */ }
 
 function getCourses() {
   var base = SEED_COURSES.filter(function (c) { return state.deletedIds.indexOf(c.id) === -1; }).map(function (c) {
@@ -335,6 +343,7 @@ var VIEWS = ['catalog', 'course', 'lesson', 'quiz', 'auth', 'dashboard', 'mentor
 function showView(name) {
   VIEWS.forEach(function (v) { var el = document.getElementById('view-' + v); if (el) el.hidden = v !== name; });
   if (name === 'dashboard') renderDashboard();
+  if (name === 'mentors') renderMentors();
   if (name === 'admin') renderAdmin();
   window.scrollTo(0, 0);
 }
@@ -505,42 +514,111 @@ function renderDashboard() {
       return '<article class="card dash-course" data-course-id="' + c.id + '"><h3>' + esc(c.title) + '</h3><p>' + esc(c.track) + ' · ' + esc(c.level) + '</p><div class="progress-wrap"><div class="progress-bar" style="width:' + pct + '%"></div></div><p class="dash-progress">' + pct + '% complete</p><div class="card-actions"><button class="btn btn-small open-course-btn" data-id="' + c.id + '" type="button">Open course</button>' + (pct === 100 ? '<button class="btn btn-small btn-aqua cert-btn" data-id="' + c.id + '" type="button">View certificate</button>' : '') + '</div></article>';
     }).join('') : '<p>No enrollments yet.</p>') + '</div>' +
     '<div class="two-col" style="margin-top:24px"><div class="panel"><h3>Quiz score history</h3><ul id="quiz-history">' + (myQuizzes.length ? myQuizzes.map(function (r) { return '<li>' + esc(r.courseTitle || r.courseId) + ', ' + r.score + '/' + r.total + ' (' + r.pct + '%) · ' + esc(r.date) + '</li>'; }).join('') : '<li>No quizzes yet.</li>') + '</ul></div>' +
-    '<div class="panel"><h3>Mentor inbox</h3><div id="mentor-inbox">' + (myMsgs.length ? myMsgs.map(function (m) { return '<div style="border-top:1px solid var(--line);padding:10px 0"><p><strong>You → ' + esc(m.mentorName) + ':</strong> ' + esc(m.text) + '</p><p><strong>' + esc(m.mentorName) + ' replied:</strong> ' + esc(m.reply) + '</p></div>'; }).join('') : '<p>No mentor messages yet. Ask one from the Mentors view.</p>') + '</div></div></div>';
+    '<div class="panel"><h3>Mentor inbox</h3><div id="mentor-inbox">' + (myMsgs.length ? myMsgs.map(function (m) { return '<div style="border-top:1px solid var(--line);padding:10px 0"><p><strong>You → ' + esc(m.mentorName) + ':</strong> ' + esc(m.text) + '</p>' + (m.reply ? '<p><strong>' + esc(m.mentorName) + ' replied:</strong> ' + esc(m.reply) + '</p>' : '<p style="color:var(--muted)">Awaiting reply — this mentor has not replied yet. No automatic reply is sent for them.</p>') + '</div>'; }).join('') : '<p>No mentor messages yet. Ask one from the Mentors view.</p>') + '</div></div>' +
+    (function () { var prof = getMentors().filter(function (mm) { return mm.email === u.email; })[0]; if (!prof) return ''; var qs = state.mentorMessages.filter(function (mm) { return mm.mentorId === prof.id; }); return '<div class="panel" style="margin-top:24px"><h3>Questions for you as a mentor</h3>' + (qs.length ? qs.map(function (q) { return '<form class="mentor-reply-form" data-id="' + esc(q.id) + '" style="border-top:1px solid var(--line);padding:10px 0"><p><strong>' + esc(q.email) + ' asked:</strong> ' + esc(q.text) + '</p>' + (q.reply ? '<p><strong>Your reply:</strong> ' + esc(q.reply) + '</p>' : '<div class="field"><label>Your reply</label><textarea class="mentor-reply-text" rows="2" required></textarea></div><button class="btn btn-small btn-orange" type="submit">Send reply</button>') + '</form>'; }).join('') : '<p>No learner questions for you yet.</p>') + '</div>'; })() + '</div>';
+  box.querySelectorAll('.mentor-reply-form').forEach(function (f) { f.addEventListener('submit', function (e) { e.preventDefault(); var ta = f.querySelector('.mentor-reply-text'); if (!ta) return; if (replyMentorMessage(f.getAttribute('data-id'), ta.value)) renderDashboard(); }); });
   box.querySelectorAll('.open-course-btn').forEach(function (b) { b.addEventListener('click', function () { openCourse(b.getAttribute('data-id')); }); });
   box.querySelectorAll('.cert-btn').forEach(function (b) { b.addEventListener('click', function () { openCertificate(b.getAttribute('data-id')); }); });
   var cb = box.querySelector('.continue-btn'); if (cb) cb.addEventListener('click', function () { openLesson(cb.getAttribute('data-course'), parseInt(cb.getAttribute('data-idx'), 10)); });
   var sl = document.getElementById('dash-supporter-link'); if (sl) sl.addEventListener('click', function (e) { e.preventDefault(); showView('supporter'); });
 }
 function openCertificate(courseId) {
-  var u = currentUser(); var c = getCourse(courseId); if (!u || !c) return;
+  var u = currentUser(); var c = getCourse(courseId); if (!u || !c) return false;
+  /* Gating is enforced here, not just by hiding the dashboard button:
+     a certificate is rendered only at 100% real lesson completion. */
+  if (progressFor(u.email, c) < 100) {
+    document.getElementById('certificate-area').innerHTML =
+      '<div class="panel"><h2 class="display">Certificate not ready yet</h2>' +
+      '<p>You have completed ' + progressFor(u.email, c) + '% of <strong>' + esc(c.title) + '</strong>. ' +
+      'Finish every lesson (mark each complete) and the certificate unlocks at 100%.</p>' +
+      '<button class="btn btn-orange" id="cert-back2" type="button">Back to dashboard</button></div>';
+    showView('certificate');
+    document.getElementById('cert-back2').addEventListener('click', function () { showView('dashboard'); });
+    return false;
+  }
   document.getElementById('certificate-area').innerHTML =
     '<div class="cert" id="certificate"><p class="kicker" style="justify-content:center">DigiPath — an initiative by Crevanta Ventures</p><h2>Certificate of Completion</h2><p>This certifies that</p><p class="display" style="font-size:2.2rem;color:#111">' + esc(u.name) + '</p><p>has completed 100% of the course</p><p style="font-size:1.3rem"><strong>' + esc(c.title) + '</strong></p><p>' + esc(c.track) + ' · ' + esc(c.level) + ' · ' + esc(todayStr()) + '</p><p>Signed: Vikranth Reddy, DigiPath Lead &amp; Founder/CEO, Crevanta Ventures</p></div>' +
     '<div class="no-print" style="margin-top:16px;display:flex;gap:10px"><button class="btn btn-orange" id="print-cert-btn" type="button">Print certificate</button><button class="btn btn-outline" id="cert-back" type="button" style="color:var(--ink)">Back to dashboard</button></div>';
   showView('certificate');
   document.getElementById('print-cert-btn').addEventListener('click', function () { window.print(); });
+  return true;
   document.getElementById('cert-back').addEventListener('click', function () { showView('dashboard'); });
 }
 
 /* ---------------- mentors & chatbot ---------------- */
 function renderMentors() {
-  document.getElementById('mentor-grid').innerHTML = MENTORS.map(function (m) {
-    return '<article class="card mentor-card" data-mentor-id="' + m.id + '"><div class="meta"><span class="chip track">' + esc(m.track) + '</span></div><h3>' + esc(m.name) + '</h3><p>' + esc(m.blurb) + '</p></article>';
-  }).join('');
-  document.getElementById('mentor-select').innerHTML = MENTORS.map(function (m) { return '<option value="' + m.id + '">' + esc(m.name) + ': ' + esc(m.track) + '</option>'; }).join('');
+  var list = getMentors();
+  var grid = document.getElementById('mentor-grid');
+  if (!list.length) {
+    grid.innerHTML = '<div class="panel"><h3>No mentors have joined yet</h3><p>Only real people who register below appear here. There are no placeholder mentors. If you can guide learners in one of the five tracks, register as a mentor — you will appear on this page right away.</p></div>';
+  } else {
+    grid.innerHTML = list.map(function (m) {
+      return '<article class="card mentor-card" data-mentor-id="' + m.id + '"><div class="meta"><span class="chip track">' + esc(m.track) + '</span><span class="chip">Community mentor</span></div><h3>' + esc(m.name) + '</h3><p>' + esc(m.blurb) + '</p><p style="color:var(--muted);font-size:.85rem">Self-registered mentor. DigiPath has not verified credentials — please do not share personal details beyond your learning question.</p></article>';
+    }).join('');
+  }
+  var sel = document.getElementById('mentor-select');
+  sel.innerHTML = list.length ? list.map(function (m) { return '<option value="' + m.id + '">' + esc(m.name) + ': ' + esc(m.track) + '</option>'; }).join('')
+    : '<option value="">No mentors yet — register below</option>';
 }
 function sendMentorMessage(mentorId, text) {
   var u = currentUser(); if (!u) return null;
-  var mentor = MENTORS.find(function (m) { return m.id === mentorId; }) || MENTORS[0];
-  var msg = { email: u.email, mentorId: mentor.id, mentorName: mentor.name, text: text, date: todayStr(), reply: 'Thank you for your question! This is ' + mentor.name + ' (' + mentor.track + '). Keep going lesson by lesson, practise the "Try this today" step after each lesson, and write back with what felt hard. We will work on it together in your next message.' };
+  var mentor = getMentors().filter(function (m) { return m.id === mentorId; })[0];
+  if (!mentor) return null; /* no mentors listed, no message target, no fake reply */
+  var msg = { id: 'q-' + Date.now(), email: u.email, mentorId: mentor.id, mentorName: mentor.name, mentorEmail: mentor.email, text: text, date: todayStr(), reply: null };
   state.mentorMessages.push(msg); persist(); return msg;
+}
+function replyMentorMessage(msgId, replyText) {
+  /* Only the registered mentor the question was sent to can reply, while
+     logged in with the email they registered with. No auto-replies exist. */
+  var u = currentUser(); if (!u) return null;
+  var msg = state.mentorMessages.filter(function (m) { return m.id === msgId; })[0];
+  if (!msg || msg.mentorEmail !== u.email) return null;
+  msg.reply = String(replyText || '').trim(); msg.replyDate = todayStr(); persist(); return msg;
+}
+/* Content-grounded guide: answers are quoted from the real course
+   material below — never generated, never invented. LLM UPGRADE PATH
+   (needs an account only the site owner can create): call an LLM API
+   with ONLY the matched lesson text as context, and keep the quote +
+   course/lesson attribution in the answer. Until then, this helper is
+   keyword search over the lessons, and it says so when it finds nothing. */
+var GUIDE_STOPWORDS = ['what', 'how', 'does', 'do', 'is', 'are', 'the', 'a', 'an', 'and', 'or', 'to', 'of', 'in', 'on', 'for', 'with', 'me', 'my', 'i', 'want', 'learn', 'about', 'tell', 'please', 'can', 'you', 'course', 'lesson'];
+function searchCourseContent(text) {
+  var words = String(text || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(' ').filter(function (w) { return w.length >= 3 && GUIDE_STOPWORDS.indexOf(w) === -1; });
+  if (!words.length) return null;
+  var best = null, bestScore = 0;
+  getCourses().forEach(function (c) {
+    c.lessons.forEach(function (l) {
+      var score = 0;
+      words.forEach(function (w) {
+        if (l.title.toLowerCase().indexOf(w) > -1) score += 3;
+        if (l.body.toLowerCase().indexOf(w) > -1) score += 1;
+        l.steps.forEach(function (st) { if (st.toLowerCase().indexOf(w) > -1) score += 1; });
+      });
+      if (score > bestScore) { bestScore = score; best = { course: c, lesson: l, score: score }; }
+    });
+  });
+  return bestScore >= 2 ? best : null;
 }
 function chatAnswer(text) {
   var t = ' ' + String(text || '').toLowerCase() + ' ';
   for (var i = 0; i < FAQS.length; i++) { for (var j = 0; j < FAQS[i].keys.length; j++) { if (t.indexOf(FAQS[i].keys[j]) > -1) return FAQS[i].a; } }
+  var hit = searchCourseContent(text);
+  if (hit) {
+    var excerpt = hit.lesson.body.split('\n\n')[0];
+    if (excerpt.length > 320) excerpt = excerpt.slice(0, 320) + '…';
+    return 'From the lesson "' + hit.lesson.title + '" in the course "' + hit.course.title + '" (' + hit.course.track + '): ' + excerpt + ' Open that course from the Catalog to read the full lesson and its step-by-step practice.';
+  }
   return FALLBACK_ANSWER;
 }
 
 /* ---------------- supporter checkout ---------------- */
+/* PAYMENT UPGRADE PATH (needs an account only the site owner can create):
+   no real payment is wired here. To accept real supporter payments,
+   connect a provider (e.g. Razorpay/Stripe checkout session) in
+   startCheckout, and set supporter=true ONLY after a verified payment
+   confirmation. Until then this stays a labelled demo: it must never
+   collect real card details, and supporter badges from it mean "demo
+   supporter on this browser", not a real payment. */
 var pendingPlan = null;
 function startCheckout(plan, price) {
   var u = currentUser();
@@ -562,19 +640,17 @@ function completeCheckout() {
 function renderAdmin() {
   var box = document.getElementById('admin-content');
   if (!isAdmin()) {
-    box.innerHTML = '<h2 class="display">Admin</h2><p>Admin is demo-grade. Login with the admin demo account (admin@digipath.learn / admin1234), or use the role toggle:</p><button class="btn btn-orange" id="admin-toggle" type="button">Toggle role: view as Admin (demo)</button>';
-    document.getElementById('admin-toggle').addEventListener('click', function () { auth.roleOverride = auth.roleOverride === 'admin' ? null : 'admin'; persist(); renderAuthArea(); renderAdmin(); });
+    box.innerHTML = '<h2 class="display">Admin</h2><p>Admin tools need the site-owner admin account. There is no self-service way to become an admin — the old role toggle was removed because it let any visitor grant themselves admin access. The labelled demo admin account (admin@digipath.learn / admin1234) is shown on the Login view for trying the admin tools on this browser only.</p>';
     return;
   }
   var courses = getCourses();
   var totalLessonsDone = state.completions.length;
-  var learners = Object.keys(state.enrollments).length + SEED_ENROLLMENTS.length;
+  var learners = Object.keys(state.enrollments).length; /* real accounts only — no seeded learners */
   var supporters = auth.users.filter(function (x) { return x.supporter; });
   var enrollRows = [];
   Object.keys(state.enrollments).forEach(function (email) { state.enrollments[email].forEach(function (cid) { var usr = auth.users.find(function (x) { return x.email === email; }); var cc = getCourse(cid); enrollRows.push({ name: usr ? usr.name : email, email: email, course: cc ? cc.title : cid }); }); });
-  SEED_ENROLLMENTS.forEach(function (r) { enrollRows.push(r); });
   box.innerHTML =
-    '<div class="kicker">Admin · demo</div><h2 class="display" style="font-size:clamp(2rem,5vw,3.4rem)">Impact &amp; management</h2>' +
+    '<div class="kicker">Admin</div><h2 class="display" style="font-size:clamp(2rem,5vw,3.4rem)">Impact &amp; management</h2><p style="color:var(--muted)">Counts below come only from real accounts on this browser. No seeded learners are included.</p>' +
     '<div class="stats-row" id="admin-stats"><div class="stat-tile"><strong id="admin-stat-learners">' + learners + '</strong>Learners enrolled</div><div class="stat-tile"><strong id="admin-stat-lessons">' + totalLessonsDone + '</strong>Lessons completed</div><div class="stat-tile"><strong id="admin-stat-courses">' + courses.length + '</strong>Courses live</div><div class="stat-tile"><strong>' + supporters.length + '</strong>Supporters</div></div>' +
     '<div class="panel"><h3>Add / edit a course</h3><form id="admin-course-form"><input type="hidden" id="admin-editing-id" value="" />' +
     '<div class="field"><label for="admin-title">Title</label><input id="admin-title" required /></div>' +
@@ -585,10 +661,9 @@ function renderAdmin() {
     '<button class="btn btn-orange" type="submit">Save course</button> <button class="btn btn-outline" type="button" id="admin-form-reset" style="color:var(--ink)">Clear</button></form></div>' +
     '<div class="panel" style="margin-top:18px"><h3>Courses</h3><div id="admin-course-list">' + courses.map(function (c) { return '<div class="lesson-row"><span>' + esc(c.title) + ' · ' + esc(c.track) + '</span><span><button class="btn btn-small admin-edit-btn" data-id="' + c.id + '" type="button">Edit</button> <button class="btn btn-small btn-outline admin-delete-btn" data-id="' + c.id + '" type="button" style="color:var(--ink)">Delete</button></span></div>'; }).join('') + '</div></div>' +
     '<div class="two-col" style="margin-top:18px"><div class="panel"><h3>Enrollments</h3><table id="admin-enrollments"><tr><th>Learner</th><th>Email</th><th>Course</th></tr>' + enrollRows.map(function (r) { return '<tr><td>' + esc(r.name) + '</td><td>' + esc(r.email) + '</td><td>' + esc(r.course) + '</td></tr>'; }).join('') + '</table></div>' +
-    '<div class="panel"><h3>Supporters</h3><ul id="admin-supporters">' + (supporters.length ? supporters.map(function (s) { return '<li>' + esc(s.name) + ' (' + esc(s.email) + '), ' + esc(s.plan || 'Supporter') + '</li>'; }).join('') : '<li>No supporters yet.</li>') + '</ul><button class="btn btn-small btn-outline" id="admin-toggle-off" type="button" style="color:var(--ink)">Role toggle: back to student view</button></div></div>';
+    '<div class="panel"><h3>Supporters</h3><ul id="admin-supporters">' + (supporters.length ? supporters.map(function (s) { return '<li>' + esc(s.name) + ' (' + esc(s.email) + '), ' + esc(s.plan || 'Supporter') + '</li>'; }).join('') : '<li>No supporters yet.</li>') + '</ul></div></div>';
   document.getElementById('admin-course-form').addEventListener('submit', function (e) { e.preventDefault(); adminSaveCourse(); });
   document.getElementById('admin-form-reset').addEventListener('click', function () { document.getElementById('admin-course-form').reset(); document.getElementById('admin-editing-id').value = ''; });
-  var tg = document.getElementById('admin-toggle-off'); if (tg) tg.addEventListener('click', function () { auth.roleOverride = null; persist(); renderAuthArea(); renderAdmin(); });
   box.querySelectorAll('.admin-edit-btn').forEach(function (b) { b.addEventListener('click', function () { var c = getCourse(b.getAttribute('data-id')); if (!c) return; document.getElementById('admin-editing-id').value = c.id; document.getElementById('admin-title').value = c.title; document.getElementById('admin-track').value = c.track; document.getElementById('admin-level').value = c.level; document.getElementById('admin-duration').value = c.duration; document.getElementById('admin-desc').value = c.description; window.scrollTo(0, 0); }); });
   box.querySelectorAll('.admin-delete-btn').forEach(function (b) { b.addEventListener('click', function () { adminDeleteCourse(b.getAttribute('data-id')); }); });
 }
@@ -616,17 +691,18 @@ function init() {
   document.getElementById('catalog-search').addEventListener('input', function (e) { searchTerm = e.target.value.toLowerCase(); renderCatalog(); });
   document.getElementById('login-form').addEventListener('submit', function (e) { e.preventDefault(); var u = doLogin(document.getElementById('login-email').value.trim(), document.getElementById('login-password').value); var m = document.getElementById('auth-msg'); if (!u) { m.innerHTML = '<span class="err">Login failed. Check email and password, or use the demo account.</span>'; return; } m.innerHTML = '<span class="msg">Welcome back, ' + esc(u.name) + '.</span>'; renderAuthArea(); renderCatalog(); showView('dashboard'); });
   document.getElementById('register-form').addEventListener('submit', function (e) { e.preventDefault(); var u = doRegister(document.getElementById('register-name').value.trim(), document.getElementById('register-email').value.trim(), document.getElementById('register-password').value); var m = document.getElementById('auth-msg'); if (!u) { m.innerHTML = '<span class="err">That email is already registered. Please login.</span>'; return; } m.innerHTML = '<span class="msg">Account created. Welcome, ' + esc(u.name) + '!</span>'; renderAuthArea(); renderCatalog(); showView('dashboard'); });
-  document.getElementById('mentor-form').addEventListener('submit', function (e) { e.preventDefault(); var u = currentUser(); var fm = document.getElementById('mentor-form-msg'); if (!u) { fm.innerHTML = '<span class="err">Please login to ask a mentor.</span>'; showView('auth'); return; } var msg = sendMentorMessage(document.getElementById('mentor-select').value, document.getElementById('mentor-message').value.trim()); if (msg) { fm.innerHTML = '<span class="msg">Sent to ' + esc(msg.mentorName) + '. See the reply thread in your Dashboard mentor inbox.</span>'; document.getElementById('mentor-message').value = ''; } });
+  document.getElementById('mentor-register-form').addEventListener('submit', function (e) { e.preventDefault(); var rm = document.getElementById('mentor-reg-msg'); var m = registerMentor(document.getElementById('mentor-reg-name').value, document.getElementById('mentor-reg-email').value, document.getElementById('mentor-reg-track').value, document.getElementById('mentor-reg-expertise').value); if (!m) { rm.innerHTML = '<span class="err">Please fill in your name, email and track.</span>'; return; } rm.innerHTML = '<span class="msg">Welcome, ' + esc(m.name) + '. You are now listed as a mentor. Learners can send you questions; reply to them from your Dashboard.</span>'; renderMentors(); });
+  document.getElementById('mentor-form').addEventListener('submit', function (e) { e.preventDefault(); var u = currentUser(); var fm = document.getElementById('mentor-form-msg'); if (!u) { fm.innerHTML = '<span class="err">Please login to ask a mentor.</span>'; showView('auth'); return; } var msg = sendMentorMessage(document.getElementById('mentor-select').value, document.getElementById('mentor-message').value.trim()); if (!msg) { fm.innerHTML = '<span class="err">No mentors are listed yet. Register as a mentor below, or ask the course guide instead.</span>'; return; } if (msg) { fm.innerHTML = '<span class="msg">Sent to ' + esc(msg.mentorName) + '. See the reply thread in your Dashboard mentor inbox.</span>'; document.getElementById('mentor-message').value = ''; } });
   document.querySelectorAll('.supporter-plan-btn').forEach(function (b) { b.addEventListener('click', function () { startCheckout(b.getAttribute('data-plan'), b.getAttribute('data-price')); }); });
   document.getElementById('checkout-form').addEventListener('submit', function (e) { e.preventDefault(); completeCheckout(); });
   document.getElementById('checkout-to-dashboard').addEventListener('click', function () { showView('dashboard'); });
   var panel = document.getElementById('chatbot-panel'), toggle = document.getElementById('chatbot-toggle');
-  toggle.addEventListener('click', function () { var open = panel.hidden; panel.hidden = !open; toggle.setAttribute('aria-expanded', String(open)); if (open && !document.getElementById('chatbot-messages').children.length) { addChat('bot', 'Hi! I am the DigiPath help assistant. Ask me about courses, cost, certificates, mentors or quizzes.'); } });
+  toggle.addEventListener('click', function () { var open = panel.hidden; panel.hidden = !open; toggle.setAttribute('aria-expanded', String(open)); if (open && !document.getElementById('chatbot-messages').children.length) { addChat('bot', 'Hi! I am the DigiPath course guide. I answer from the actual course lessons — I am not an AI model. Ask me about a topic, cost, certificates, mentors or quizzes.'); } });
   document.getElementById('chatbot-form').addEventListener('submit', function (e) { e.preventDefault(); var input = document.getElementById('chatbot-input'); var text = input.value.trim(); if (!text) return; addChat('user', text); addChat('bot', chatAnswer(text)); input.value = ''; });
   function addChat(who, text) { var d = document.createElement('div'); d.className = 'chat-msg ' + who; d.textContent = text; document.getElementById('chatbot-messages').appendChild(d); }
 }
 
-window.DigiPathApp = { getCourses: getCourses, getCourse: getCourse, getState: function () { return state; }, getAuth: function () { return auth; }, currentUser: currentUser, isAdmin: isAdmin, enrollIn: enrollIn, completeLesson: completeLesson, gradeQuiz: gradeQuiz, doLogin: doLogin, doRegister: doRegister, sendMentorMessage: sendMentorMessage, chatAnswer: chatAnswer, completeCheckout: completeCheckout, startCheckout: startCheckout, adminSaveCourse: adminSaveCourse, adminDeleteCourse: adminDeleteCourse, showView: showView, openCourse: openCourse, openLesson: openLesson, openQuiz: openQuiz, progressFor: progressFor, TRACKS: TRACKS, MENTORS: MENTORS, AUTH_KEY: AUTH_KEY, STATE_KEY: STATE_KEY };
+window.DigiPathApp = { getCourses: getCourses, getCourse: getCourse, getState: function () { return state; }, getAuth: function () { return auth; }, currentUser: currentUser, isAdmin: isAdmin, enrollIn: enrollIn, completeLesson: completeLesson, gradeQuiz: gradeQuiz, doLogin: doLogin, doRegister: doRegister, sendMentorMessage: sendMentorMessage, chatAnswer: chatAnswer, completeCheckout: completeCheckout, startCheckout: startCheckout, adminSaveCourse: adminSaveCourse, adminDeleteCourse: adminDeleteCourse, showView: showView, openCourse: openCourse, openLesson: openLesson, openQuiz: openQuiz, progressFor: progressFor, TRACKS: TRACKS, getMentors: getMentors, registerMentor: registerMentor, replyMentorMessage: replyMentorMessage, searchCourseContent: searchCourseContent, openCertificate: openCertificate, MENTORS_KEY: MENTORS_KEY, AUTH_KEY: AUTH_KEY, STATE_KEY: STATE_KEY };
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
